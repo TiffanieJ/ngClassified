@@ -1,0 +1,100 @@
+<!--Toolbar -->	
+<md-toolbar>
+<div class="md-toolbar-tools">
+	<p><strong>ngClassifieds</strong></p>
+	<md-button ng-click="vm.openSidebar()">
+		<md-icon class="mdi mdi-plus-circle"></md-icon>
+		New Classified
+	</md-button>
+
+	<md-button ng-click="showFilters=true">
+		<md-icon class="mdi mdi-magnify"></md-icon>
+		Filters
+	</md-button>
+</div>
+</md-toolbar>
+
+
+
+<!-- Filter-->
+<div class="filters" layout="row" layout-align="center center" ng-show="showFilters">
+
+<md-input-container>
+	<label>Enter Search Term</label>
+	<input type="text" ng-model="classifiedsFilter">
+</md-input-container>
+
+<md-input-container>
+	<label>Category</label>
+	<md-select ng-model="category">
+		<md-option ng-repeat="category in vm.categories" value="{{ category }}" id="select">
+			{{ category }}
+		</md-option> 
+	</md-select>
+</md-input-container>
+
+<div id="clear">
+	<md-button class="md-warn" ng-click="classifiedsFilter = ''; category = '' ">Clear</md-button>
+</div>
+
+</div>
+
+<!-- SideNav -->
+
+<ui-view></ui-view>
+
+<!-- SideNav -->
+
+
+<!-- CARDS -->
+<!-- ng-repeat creates new scope that is distinct from any other scope above -->
+<md-content class="md-padding" layout="row" layout-wrap>
+<md-card ng-repeat="classified in vm.classifieds | 
+					filter: classifiedsFilter |
+					filter: category" flex="30"
+					class="classified"> 
+	<img ng-src= "{{classified.image}}" alt="">
+	
+
+	<md-card-content>
+		
+		<!--DETAILS-->
+		<!-- ng-show shows content when conditions is truthy-->
+		<div class="classified-info" ng-show="!showContact">
+			<h2 class="md-title">{{classified.title}}</h2>
+			<!-- | pipes in angular filters, : allows for angular arguments in pipe-->
+			<h2> {{classified.posted | date: 'longDate'}} </h2>
+			<h3> {{classified.price | currency}} </h3>
+			<p> {{classified.description}} </p>	
+		</div>
+
+		<!-- ICONS -->
+		<div class="classified-contact" ng-show="showContact">
+			<p><md-icon class="mdi mdi-account"></md-icon> {{classified.contact.name}} </p>
+			<p><md-icon class="mdi mdi-phone"></md-icon> {{classified.contact.phone}} </p>
+			<p><md-icon class="mdi mdi-email"></md-icon> {{classified.contact.email}} </p>
+		</div>	
+		
+		<!-- BUTTONS-->
+		<div layout="row">
+			<md-button ng-click="showContact = true" ng-show="!showContact">Contact Info</md-button>
+			<md-button ng-click="showContact = false" ng-show="showContact">Details</md-button>
+			<md-button ng-click="showAdmin = true" ng-show="!showAdmin">Admin</md-button>
+			<md-button ng-click="showAdmin = false" ng-show="showAdmin">Close</md-button>
+		</div>
+		
+		<!--ADMIN-->
+		<div class="classified-admin" ng-if="showAdmin">
+			<h3>Admin</h3>
+			<!--ADMIN BUTTONS-->
+			<div layout="row">
+				<!-- the classified passed here is the current classified we are iterating from ng-repeat-->
+				<md-button class="md-primary" ng-click="vm.editClassified(classified)">Edit</md-button>
+				<md-button ng-click="vm.deleteClassified($event, classified)"class="md-warn">Delete</md-button>
+			</div>
+		</div>
+
+		
+	</md-card-content>
+</md-card>
+</md-content>
