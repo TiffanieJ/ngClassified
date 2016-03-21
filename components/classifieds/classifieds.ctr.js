@@ -17,15 +17,19 @@
 			vm.editClassified = editClassified;
 			vm.openSidebar = openSidebar;
 			vm.saveClassified = saveClassified;
-			
-			classifiedsFactory.getClassifieds().then(function (classifieds) {
-				vm.classifieds = classifieds.data;
-				vm.categories = getCategories(vm.classifieds);
+
+			vm.classifieds = classifiedsFactory.ref;
+			vm.classifieds.$loaded().then(function (classifieds) { //<-- loads categories for filter
+				vm.categories = getCategories(classifieds);
 			});
+			
+			// classifiedsFactory.getClassifieds().then(function (classifieds) {
+			// 	vm.classifieds = classifieds.data;
+			// 	vm.categories = getCategories(vm.classifieds);
+			// });
 
 			$scope.$on('newClassified', function(event, classified) {
-				classified.id = vm.classifieds.length + 1;
-				vm.classifieds.push(classified);
+				vm.classifieds.$add(classified);  //<-- $add adds to our firebase db
 				showToast('Classifieds Saved!');
 			})
 
@@ -57,8 +61,8 @@
 				// vm.classified = classified; // <-- .classified called in from our ng.model
 
 				$state.go('classifieds.edit', {
-					id:classified.id,
-					classified: classified
+					id:classified.$id
+					
 				});
 			}
 
@@ -82,9 +86,8 @@
 							
 							
 							$mdDialog.show(confirm).then(function() {
-								var index = vm.classifieds.indexOf(classified);
-								vm.classifieds.splice(index, 1);
-								showToast("Classified Deleted", 3500);
+								vm.classifieds.$remove(classified);
+								showToast('Classified deleted!', 3000);
 
 								}, function () {
 

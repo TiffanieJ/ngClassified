@@ -48,7 +48,7 @@
 
 <!-- CARDS -->
 <!-- ng-repeat creates new scope that is distinct from any other scope above -->
-<md-content class="md-padding" layout="row" layout-wrap>
+<md-content class="md-padding" layout="row" layout-wrap ng-cloak>
 <md-card ng-repeat="classified in vm.classifieds | 
 					filter: classifiedsFilter |
 					filter: category" flex="30"
@@ -69,8 +69,8 @@
 		</div>
 
 		<!-- ICONS -->
-		<div class="classified-contact" ng-show="showContact">
-			<p><md-icon class="mdi mdi-account"></md-icon> {{classified.contact.name}} </p>
+		<div class="classified-contact" ng-show="showContact" ng-cloak>
+			<p ng-cloak><md-icon class="mdi mdi-account"></md-icon> {{classified.contact.name}} </p>
 			<p><md-icon class="mdi mdi-phone"></md-icon> {{classified.contact.phone}} </p>
 			<p><md-icon class="mdi mdi-email"></md-icon> {{classified.contact.email}} </p>
 		</div>	
