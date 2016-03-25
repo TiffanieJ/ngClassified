@@ -114,7 +114,7 @@
 				return _.uniq(categories); //returns only unique categories
 			}	
 
-	});
+	})
 
 })();
 
